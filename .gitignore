@@ -3,3 +3,13 @@
 ################################################################################
 
 /Buisness Layer/bin
+/Buisness Layer/obj
+/Connected_Users/bin
+/Connected_Users/logs
+/Connected_Users/obj
+/DAL/bin
+/DAL/obj
+/Models/bin/Debug/netcoreapp2.2
+/Models/obj
+/TokenManager/bin/Debug/netstandard2.0
+/TokenManager/obj
