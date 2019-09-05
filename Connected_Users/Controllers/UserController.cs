@@ -54,9 +54,15 @@ namespace Connected_Users.Controllers
         // POST: Login
         [AllowAnonymous]
         [HttpPost, Route("~/api/[controller]/Login")]
-        public string Post([FromBody] dynamic val)
+        public IActionResult Post([FromBody] dynamic val)
         {
-            return usersBL.Login(Convert.ToString(val.username), Convert.ToString(val.password), Convert.ToDateTime(DateTime.ParseExact(Convert.ToString(val.dob), "dd-MM-yyyy", CultureInfo.InvariantCulture)));
+            string token = usersBL.Login(Convert.ToString(val.username), Convert.ToString(val.password), Convert.ToDateTime(DateTime.ParseExact(Convert.ToString(val.dob), "dd-MM-yyyy", CultureInfo.InvariantCulture)));
+            if (String.IsNullOrEmpty(token))
+            {
+                return Unauthorized();
+            }
+
+            return Ok(token);
         }
 
         [AllowAnonymous]

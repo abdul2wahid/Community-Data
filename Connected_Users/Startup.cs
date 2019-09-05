@@ -37,10 +37,12 @@ namespace Connected_Users
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddCors(); 
 
 
             services.AddMvc();
 
+ 
 
             // Authorization and authentication are closely linked in ASP.NET Core. When authorization fails, this will be passed to an authentication handler to handle the authorization failure.
             //So even if you don’t need actual authentication to identify your users, you will still need to set up some authentication scheme that is able to handle forbid and challenge results(403 and 401).
@@ -89,7 +91,13 @@ namespace Connected_Users
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-         
+
+         app.UseCors(
+         options => options.WithOrigins("http://localhost:4200").AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowAnyMethod());
+
+
 
             app.UseAuthentication();
             app.UseMyHandler();
