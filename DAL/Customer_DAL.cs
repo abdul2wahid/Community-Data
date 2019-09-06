@@ -128,7 +128,7 @@ namespace DAL
 
             using (var context = new connected_usersContext())
             {
-                if (filterString != string.Empty)
+                if (!string.IsNullOrEmpty(filterString))
                 {
                     string[] filterStringArray = filterString.Split(';');
                     List<CustomerModel> s = context.Customers
