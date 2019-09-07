@@ -213,17 +213,19 @@ namespace DAL
                 {
                     CustomerID = m.CustomerId,
                     CutomerName = m.Name,
-                    Age =m.Dob.Year-DateTime.Now.Year,
+                    Age = m.Dob.Year - DateTime.Now.Year,
                     Gender = m.Gender.Gender1,
                     MobileNumber = m.MobileNumber,
                     MaritalStatus = m.MaritalStatus.MaritalStatus1,
-                    Occupation=m.Occupation.OccuptionName,
+                    Occupation = m.Occupation.OccuptionName,
                     Address1 = m.CustomerAddress.Address1,
                     Address2 = m.CustomerAddress.Address2,
                     StateId = m.CustomerAddress.StateId,
                     CityId = m.CustomerAddress.CityId,
                     Area = m.CustomerAddress.Area,
                     PinId = m.CustomerAddress.PinId,
+                    OccupationDetails = m.OccupdationDetails,
+                    EducationDetails=m.EducationDetail,
 
 
                 }).SingleOrDefault(x => x.CustomerID == custID));
@@ -248,14 +250,15 @@ namespace DAL
                         Gender = m.Gender.Gender1,
                         MobileNumber = m.MobileNumber,
                         MaritalStatus = m.MaritalStatus.MaritalStatus1,
-
+                        Occupation = m.Occupation.OccuptionName,
                         Address1 = m.CustomerAddress.Address1,
                         Address2 = m.CustomerAddress.Address2,
                         StateId = m.CustomerAddress.StateId,
                         CityId = m.CustomerAddress.CityId,
                         Area = m.CustomerAddress.Area,
                         PinId = m.CustomerAddress.PinId,
-
+                        OccupationDetails = m.OccupdationDetails,
+                        EducationDetails = m.EducationDetail,
 
                     }).SingleOrDefault(x => x.CustomerID == id));
                 }
