@@ -40,7 +40,11 @@ namespace Models
         public int? PinId { get; set; }
         public int? CityId { get; set; }
 
-    
+        public string State { get; set; }
+        public string Pin { get; set; }
+        public string City  { get; set; }
+
+
         //To remove the current user as dependant to others 
         public bool DependantToBeDeleted { get; set; }
 

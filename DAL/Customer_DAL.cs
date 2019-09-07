@@ -220,12 +220,13 @@ namespace DAL
                     Occupation = m.Occupation.OccuptionName,
                     Address1 = m.CustomerAddress.Address1,
                     Address2 = m.CustomerAddress.Address2,
-                    StateId = m.CustomerAddress.StateId,
-                    CityId = m.CustomerAddress.CityId,
+                    State = m.CustomerAddress.State.State,
+                    City = m.CustomerAddress.City.City1,
                     Area = m.CustomerAddress.Area,
-                    PinId = m.CustomerAddress.PinId,
+                    Pin = m.CustomerAddress.Pin.Pin,
                     OccupationDetails = m.OccupdationDetails,
                     EducationDetails=m.EducationDetail,
+                    
 
 
                 }).SingleOrDefault(x => x.CustomerID == custID));
@@ -253,10 +254,10 @@ namespace DAL
                         Occupation = m.Occupation.OccuptionName,
                         Address1 = m.CustomerAddress.Address1,
                         Address2 = m.CustomerAddress.Address2,
-                        StateId = m.CustomerAddress.StateId,
-                        CityId = m.CustomerAddress.CityId,
+                        State = m.CustomerAddress.State.State,
+                        City = m.CustomerAddress.City.City1,
                         Area = m.CustomerAddress.Area,
-                        PinId = m.CustomerAddress.PinId,
+                        Pin = m.CustomerAddress.Pin.Pin,
                         OccupationDetails = m.OccupdationDetails,
                         EducationDetails = m.EducationDetail,
 

@@ -62,6 +62,33 @@ namespace Connected_Users.Controllers
         }
 
 
+        [HttpGet, Route("~/api/[controller]/GetCities")]
+        public IActionResult GetCities()
+        {
+            return Ok(utilityBL.GetCities(
+          HttpContext.User.FindFirst(c => c.Type == "RId").Value,
+              HttpContext.User.FindFirst(c => c.Type == "Id").Value));
+        }
+
+
+        [HttpGet, Route("~/api/[controller]/GetStates")]
+        public IActionResult GetStates()
+        {
+            return Ok(utilityBL.GetStates(
+          HttpContext.User.FindFirst(c => c.Type == "RId").Value,
+              HttpContext.User.FindFirst(c => c.Type == "Id").Value));
+        }
+
+
+        [HttpGet, Route("~/api/[controller]/GetPincodes")]
+        public IActionResult GetPincodes()
+        {
+            return Ok(utilityBL.GetPincodes(
+          HttpContext.User.FindFirst(c => c.Type == "RId").Value,
+              HttpContext.User.FindFirst(c => c.Type == "Id").Value));
+        }
+
+
         // POST: api/Utility
         [HttpPost]
         public void Post([FromBody] string value)

@@ -53,5 +53,34 @@ namespace DAL
                 return context.Occupation.ToList();
             }
         }
+
+
+        public List<City> GetCities()
+        {
+            using (var context = new connected_usersContext())
+            {
+
+                return context.City.ToList();
+            }
+        }
+
+        public List<States> GetStates()
+        {
+            using (var context = new connected_usersContext())
+            {
+
+                return context.States.ToList();
+            }
+        }
+
+        public List<Pincode> GetPincodes()
+        {
+            using (var context = new connected_usersContext())
+            {
+
+                return context.Pincode.ToList();
+            }
+        }
+        
     }
 }

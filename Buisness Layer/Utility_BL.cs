@@ -45,5 +45,25 @@ namespace BuisnessLayer
         {
             return dal.GetOccupation();
         }
+
+
+        public List<City> GetCities(string loggedInUserRoleId, string userId)
+        {
+            return dal.GetCities();
+        }
+
+
+        public List<States> GetStates(string loggedInUserRoleId, string userId)
+        {
+            return dal.GetStates();
+        }
+
+
+        public List<Pincode> GetPincodes(string loggedInUserRoleId, string userId)
+        {
+            return dal.GetPincodes();
+        }
+
+        
     }
 }
