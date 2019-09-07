@@ -217,7 +217,7 @@ namespace DAL
                     Gender = m.Gender.Gender1,
                     MobileNumber = m.MobileNumber,
                     MaritalStatus = m.MaritalStatus.MaritalStatus1,
-
+                    Occupation=m.Occupation.OccuptionName,
                     Address1 = m.CustomerAddress.Address1,
                     Address2 = m.CustomerAddress.Address2,
                     StateId = m.CustomerAddress.StateId,

@@ -34,11 +34,33 @@ namespace Connected_Users.Controllers
         }
 
         // GET: api/Utility/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [HttpGet, Route("~/api/[controller]/GetGender")]
+        public IActionResult GetGender()
         {
-            return "value";
+            return Ok(utilityBL.GetGender(
+          HttpContext.User.FindFirst(c => c.Type == "RId").Value,
+              HttpContext.User.FindFirst(c => c.Type == "Id").Value));
         }
+
+
+        [HttpGet, Route("~/api/[controller]/GetOccupation")]
+        public IActionResult GetOccupation()
+        {
+            return Ok(utilityBL.GetOccupation(
+          HttpContext.User.FindFirst(c => c.Type == "RId").Value,
+              HttpContext.User.FindFirst(c => c.Type == "Id").Value));
+        }
+
+
+
+        [HttpGet, Route("~/api/[controller]/GetMaritalstatus")]
+        public IActionResult GetMaritalstatus()
+        {
+            return Ok(utilityBL.GetMaritalstatus(
+          HttpContext.User.FindFirst(c => c.Type == "RId").Value,
+              HttpContext.User.FindFirst(c => c.Type == "Id").Value));
+        }
+
 
         // POST: api/Utility
         [HttpPost]

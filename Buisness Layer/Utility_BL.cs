@@ -29,5 +29,21 @@ namespace BuisnessLayer
 
             return result;
         }
+
+        public List<Gender> GetGender(string loggedInUserRoleId, string userId)
+        {
+            return dal.GetGender();
+        }
+
+        public List<Maritalstatus> GetMaritalstatus(string loggedInUserRoleId, string userId)
+        {
+            return dal.GetMaritalstatus();
+        }
+
+
+        public List<Occupation> GetOccupation(string loggedInUserRoleId, string userId)
+        {
+            return dal.GetOccupation();
+        }
     }
 }

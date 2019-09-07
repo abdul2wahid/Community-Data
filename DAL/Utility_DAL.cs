@@ -24,5 +24,34 @@ namespace DAL
                 return context.Roles.ToList();
             }
         }
+
+        public List<Gender> GetGender()
+        {
+            using (var context = new connected_usersContext())
+            {
+
+                return context.Gender.ToList();
+            }
+        }
+
+
+        public List<Maritalstatus> GetMaritalstatus()
+        {
+            using (var context = new connected_usersContext())
+            {
+
+                return context.Maritalstatus.ToList();
+            }
+
+        }
+
+        public List<Occupation> GetOccupation()
+        {
+            using (var context = new connected_usersContext())
+            {
+
+                return context.Occupation.ToList();
+            }
+        }
     }
 }

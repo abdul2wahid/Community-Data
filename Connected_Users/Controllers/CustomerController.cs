@@ -32,7 +32,7 @@ namespace Connected_Users.Controllers
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Route("~/api/[controller]/Detail")]
         public List<CustomerDetails> Get(int id)
         {
             return bl.GetCustomerDetails(id);
