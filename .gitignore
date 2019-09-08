@@ -13,3 +13,6 @@
 /Models/obj
 /TokenManager/bin/Debug/netstandard2.0
 /TokenManager/obj
+/.vs/Connected_Users/v15
+/.vs/config
+/.vs/Connected_Users/v15/Server/sqlite3

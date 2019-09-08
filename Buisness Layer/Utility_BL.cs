@@ -64,6 +64,16 @@ namespace BuisnessLayer
             return dal.GetPincodes();
         }
 
-        
+
+        public List<Education> GetEducation(string loggedInUserRoleId, string userId)
+        {
+            return dal.GetEducation();
+        }
+
+        public List<Arabiceducation> GetArabicEducation(string loggedInUserRoleId, string userId)
+        {
+            return dal.GetArabicEducation();
+        }
+
     }
 }

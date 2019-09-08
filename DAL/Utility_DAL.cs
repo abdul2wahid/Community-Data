@@ -81,6 +81,26 @@ namespace DAL
                 return context.Pincode.ToList();
             }
         }
-        
+
+        public List<Education> GetEducation()
+        {
+            using (var context = new connected_usersContext())
+            {
+
+                return context.Education.ToList();
+            }
+        }
+
+        public List<Arabiceducation> GetArabicEducation()
+        {
+            using (var context = new connected_usersContext())
+            {
+
+                return context.Arabiceducation.ToList();
+            }
+        }
+
+
+
     }
 }

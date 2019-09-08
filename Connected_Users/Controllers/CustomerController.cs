@@ -106,7 +106,7 @@ namespace Connected_Users.Controllers
         }
 
         // PUT api/values/5
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Route("~/api/[controller]/Update")]
         public bool Put([FromBody] List<CustomerDetails> cust)
         {
             //Customers cust = new Customers() { CustomerId = id };

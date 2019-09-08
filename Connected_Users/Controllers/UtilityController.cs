@@ -88,6 +88,23 @@ namespace Connected_Users.Controllers
               HttpContext.User.FindFirst(c => c.Type == "Id").Value));
         }
 
+        [HttpGet, Route("~/api/[controller]/GetEducation")]
+        public IActionResult GetEducation()
+        {
+            return Ok(utilityBL.GetEducation(
+          HttpContext.User.FindFirst(c => c.Type == "RId").Value,
+              HttpContext.User.FindFirst(c => c.Type == "Id").Value));
+        }
+
+        [HttpGet, Route("~/api/[controller]/GetArabicEducation")]
+        public IActionResult GetArabicEducation()
+        {
+            return Ok(utilityBL.GetArabicEducation(
+          HttpContext.User.FindFirst(c => c.Type == "RId").Value,
+              HttpContext.User.FindFirst(c => c.Type == "Id").Value));
+        }
+
+
 
         // POST: api/Utility
         [HttpPost]
