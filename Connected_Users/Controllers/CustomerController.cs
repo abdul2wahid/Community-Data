@@ -38,6 +38,13 @@ namespace Connected_Users.Controllers
             return bl.GetCustomerDetails(id);
         }
 
+        [HttpGet("{id}"), Route("~/api/[controller]/Find")]
+        public int Get(string userName,string DOB)
+        {
+            return bl.FindCustomer(userName, DOB);
+        }
+
+
         [HttpGet("{id}"), Route("~/api/[controller]/DownloadCustomers")]
         public IActionResult Get()
         {

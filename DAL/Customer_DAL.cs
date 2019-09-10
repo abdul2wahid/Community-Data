@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Models;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Globalization;
 
 namespace DAL
 {
@@ -30,7 +31,12 @@ namespace DAL
                     if (c.CustomerID > -1)
                     {
                         Customers cu = context.Customers.Find(c.CustomerID);
-                        if (cu != null && cu.Name == c.CutomerName && cu.Dob == c.DOB)
+                        string stringDate = string.Empty; ;
+                        if (cu != null)
+                        {
+                            stringDate = cu.Dob.Day + "-" + cu.Dob.Month + "-" + cu.Dob.Year;
+                        }
+                        if (cu != null && cu.Name == c.CutomerName && stringDate == c.DOB)
                         {
                             dependentId = c.CustomerID;
                             continue;  //just take customer ID and return to add next user
@@ -49,7 +55,7 @@ namespace DAL
                             var customer = context.Customers.Add(new Customers()
                             {
                                 Name = c.CutomerName,
-                                Dob = c.DOB,
+                                Dob = c.DateFormatDOB,
                                 ArabicEducationId = c.arabicEducationID,
                                 EducationId = c.educationId,
                                 OccupationId = c.OccupationId,
@@ -106,7 +112,7 @@ namespace DAL
                                 PinId = c.PinId,
 
                             });
-
+                            context.SaveChanges();
 
                         }
                         catch (Exception ex)
@@ -206,14 +212,15 @@ namespace DAL
         public List<CustomerDetails> GetCustomerDetails(int custID)
         {
             List<CustomerDetails> custList = new List<CustomerDetails>();
-
+            
             using (var context = new connected_usersContext())
             {
                 custList.Add(context.Customers.AsNoTracking().Include(x => x.CustomerAddress).Select(m => new CustomerDetails()
                 {
                     CustomerID = m.CustomerId,
                     CutomerName = m.Name,
-                    Age = DateTime.Now.Year - m.Dob.Year ,
+                    Age = DateTime.Now.Year - m.Dob.Year,
+                    DOB = m.Dob.Day.ToString("D2") + "-" + m.Dob.Month.ToString("D2") + "-"+m.Dob.Year,
                     Gender = m.Gender.Gender1,
                     MobileNumber = m.MobileNumber,
                     MaritalStatus = m.MaritalStatus.MaritalStatus1,
@@ -231,11 +238,12 @@ namespace DAL
                     City = m.CustomerAddress.City.City1,
                     Area = m.CustomerAddress.Area,
                     Pin = m.CustomerAddress.Pin.Pin,
-
+                    DependantParentID=-1,
 
 
                 }).SingleOrDefault(x => x.CustomerID == custID));
 
+             
                 List<Reltionship> dependants = context.Reltionship.Where(x => x.UserId == custID).ToList();
 
                 foreach(Reltionship dep in dependants)
@@ -262,7 +270,7 @@ namespace DAL
                         OccupationDetails = m.OccupdationDetails,
                         EducationDetails = m.EducationDetail,
                         educationName = m.Education.EducationName,
-                        arabicEducationName=m.ArabicEducation.ArabicEducationName,
+                        arabicEducationName = m.ArabicEducation.ArabicEducationName,
 
                         Address1 = m.CustomerAddress.Address1,
                         Address2 = m.CustomerAddress.Address2,
@@ -270,7 +278,7 @@ namespace DAL
                         City = m.CustomerAddress.City.City1,
                         Area = m.CustomerAddress.Area,
                         Pin = m.CustomerAddress.Pin.Pin,
-                        
+                        DependantParentID = (int?)custID,
 
                     }).SingleOrDefault(x => x.CustomerID == id));
                 }
@@ -278,6 +286,27 @@ namespace DAL
 
             return custList;
         }
+
+
+        public int FindCustomer(string userName, DateTime DOB)
+        {
+           
+            using (var context = new connected_usersContext())
+            {
+                Customers cust  = context.Customers.Where(x => x.Name == userName && x.Dob == DOB).SingleOrDefault();
+
+                if (cust != null)
+                {
+                    Reltionship rela = context.Reltionship.Where(x => x.ChildernId == cust.CustomerId || x.WifeId == cust.CustomerId).SingleOrDefault();
+                    if (rela == null)
+                        return cust.CustomerId;
+                }
+                return -1;
+
+            }
+
+        }
+    
 
 
         public bool UpdateCustomers(List<CustomerDetails> cust, string loggedInUserRoleId, string userId)
@@ -293,9 +322,13 @@ namespace DAL
                     //If dependant user needs to be deleted
                     if (c.DependantToBeDeleted ?? false)
                     {
-                        Reltionship cusDe = context.Reltionship.Find(c.CustomerID);
-                        context.Reltionship.Remove(cusDe);
-                        context.SaveChanges();
+                        int? id = (int?)c.CustomerID;
+                        Reltionship cusDe = context.Reltionship.Where(x => x.ChildernId == id || x.WifeId ==id).SingleOrDefault();
+                        if (cusDe != null)
+                        {
+                            context.Reltionship.Remove(cusDe);
+                            context.SaveChanges();
+                        }
                         continue;
                     }
                     //else if (c.CustomerID == -1)  //Add new user
@@ -428,7 +461,14 @@ namespace DAL
                     return false;
                 }
 
-                //Remove relationShip
+                //If Parent , ensure dependent childrens are not alive
+                List<Reltionship> hasDependent = context.Reltionship.Where(x => x.UserId == cust).ToList(); ;
+                if (hasDependent.Count > 0)
+                {
+                    return false;
+                }
+
+                //If children, Remove relationShip
                 List<Reltionship> record = context.Reltionship.Where(x => x.ChildernId == cust || x.WifeId == cust).ToList(); ;
 
                 foreach (Reltionship rela in record)
@@ -447,6 +487,15 @@ namespace DAL
                 }
                 context.SaveChanges();
 
+
+                //Remove Address
+                List<Users> usersList = context.Users.Where(x => x.UserId == cust).ToList(); ;
+
+                foreach (Users user in usersList)
+                {
+                    context.Users.Remove(user);
+                }
+                context.SaveChanges();
 
                 //Remove Customer
                 Customers customer = context.Customers.Where(x => x.CustomerId == cust).SingleOrDefault();

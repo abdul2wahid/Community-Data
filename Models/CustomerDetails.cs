@@ -12,7 +12,8 @@ namespace Models
         }
 
 
-        public DateTime DOB { get; set; }
+        public string DOB { get; set; }
+        public DateTime DateFormatDOB { get; set; }
         public int? GenderId { get; set; }
         public int? MaritalStatusId { get; set; }
 
