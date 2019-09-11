@@ -23,7 +23,7 @@ namespace Buisness_Layer
         }
 
 
-        public bool AddCustomer(List<CustomerDetails> cust,string loggedInUserRoleId, string userId)
+        public bool AddCustomer(CustomerDetails cust,string loggedInUserRoleId, string userId)
         {
           
             return dal.AddCustomer(cust,  loggedInUserRoleId,  userId);

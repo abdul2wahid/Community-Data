@@ -15,38 +15,15 @@ namespace DAL
     {
 
 
-        public bool AddCustomer(List<CustomerDetails> cust, string loggedInUserRoleId, string userId)
+        public bool AddCustomer(CustomerDetails cust, string loggedInUserRoleId, string userId)
         {
             bool result = true;
-
-            int dependentId = -1;
-
-            foreach (CustomerDetails c in cust)
-            {
+            CustomerDetails c = cust;
 
                 using (var context = new connected_usersContext())
                 {
 
-                    //If already existing customer and user tryign to add new dependant customer
-                    if (c.CustomerID > -1)
-                    {
-                        Customers cu = context.Customers.Find(c.CustomerID);
-                        string stringDate = string.Empty; ;
-                        if (cu != null)
-                        {
-                            stringDate = cu.Dob.Day + "-" + cu.Dob.Month + "-" + cu.Dob.Year;
-                        }
-                        if (cu != null && cu.Name == c.CutomerName && stringDate == c.DOB)
-                        {
-                            dependentId = c.CustomerID;
-                            continue;  //just take customer ID and return to add next user
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
-
+                  
                     using (IDbContextTransaction trans = context.Database.BeginTransaction())
                     {
                         try
@@ -73,33 +50,7 @@ namespace DAL
                             });
                             context.SaveChanges();
 
-                            if (c.WifeId == -1 && c.ChildrenId == -1 && dependentId == -1)
-                                dependentId = customer.Entity.CustomerId;
-
-                            if (c.WifeId != -1 || c.ChildrenId != -1)
-                            {
-                                Reltionship rela = null;
-
-                                if (c.WifeId != -1)
-                                {
-                                    rela = new Reltionship()
-                                    {
-                                        UserId = dependentId,
-                                        WifeId = customer.Entity.CustomerId,
-                                    };
-                                }
-                                else if (c.ChildrenId != -1)
-                                {
-                                    rela = new Reltionship()
-                                    {
-                                        UserId = dependentId,
-                                        ChildernId = customer.Entity.CustomerId,
-                                    };
-                                }
-
-                                context.Reltionship.Add(rela);
-                                context.SaveChanges();
-                            }
+                      
 
                             context.CustomerAddress.Add(new CustomerAddress()
                             {
@@ -123,7 +74,7 @@ namespace DAL
                         trans.Commit();
                     }
                 }
-            }
+            
 
             return result;
         }

@@ -104,8 +104,9 @@ namespace Connected_Users.Controllers
 
         // POST api/values
         [HttpPost]
-        public bool Post([FromBody]List<CustomerDetails> cust)
+        public bool Post([FromBody]CustomerDetails cust)
         {
+
 
             return bl.AddCustomer(cust, HttpContext.User.FindFirst(c => c.Type == "RId").Value,
                 HttpContext.User.FindFirst(c => c.Type == "Id").Value);
