@@ -31,7 +31,7 @@ namespace DAL
 
                             var customer = context.Customers.Add(new Customers()
                             {
-                                Name = c.CutomerName,
+                                Name = c.Name,
                                 Dob = c.DateFormatDOB,
                                 ArabicEducationId = c.arabicEducationID,
                                 EducationId = c.educationId,
@@ -96,7 +96,7 @@ namespace DAL
                                         p => new CustomerModel()
                                         {
                                             CustomerID = p.i.a.x.CustomerId,
-                                            CutomerName = p.i.a.x.Name,
+                                            Name = p.i.a.x.Name,
                                             Gender = p.i.a.y.Gender1,
                                             Age = DateTime.Now.Year - p.i.a.x.Dob.Year,
                                             MaritalStatus = p.i.b.MaritalStatus1,
@@ -131,7 +131,7 @@ namespace DAL
                         p => new CustomerModel()
                         {
                             CustomerID = p.i.a.x.CustomerId,
-                            CutomerName = p.i.a.x.Name,
+                            Name = p.i.a.x.Name,
                             Gender = p.i.a.y.Gender1,
                             Age = DateTime.Now.Year - p.i.a.x.Dob.Year,
                             MaritalStatus = p.i.b.MaritalStatus1,
@@ -149,7 +149,7 @@ namespace DAL
                       p => new CustomerModel()
                       {
                           CustomerID = p.i.a.x.CustomerId,
-                          CutomerName = p.i.a.x.Name,
+                          Name = p.i.a.x.Name,
                           Gender = p.i.a.y.Gender1,
                           Age = DateTime.Now.Year - p.i.a.x.Dob.Year,
                           MaritalStatus = p.i.b.MaritalStatus1,
@@ -169,7 +169,7 @@ namespace DAL
                 custList.Add(context.Customers.AsNoTracking().Include(x => x.CustomerAddress).Select(m => new CustomerDetails()
                 {
                     CustomerID = m.CustomerId,
-                    CutomerName = m.Name,
+                    Name = m.Name,
                     Age = DateTime.Now.Year - m.Dob.Year,
                     DOB = m.Dob.Day.ToString("D2") + "-" + m.Dob.Month.ToString("D2") + "-"+m.Dob.Year,
                     Gender = m.Gender.Gender1,
@@ -210,7 +210,7 @@ namespace DAL
                     custList.Add(context.Customers.AsNoTracking().Include(x => x.CustomerAddress).Select(m => new CustomerDetails()
                     {
                         CustomerID = m.CustomerId,
-                        CutomerName = m.Name,
+                        Name = m.Name,
                         Age = DateTime.Now.Year - m.Dob.Year,
                         Gender = m.Gender.Gender1,
                         MobileNumber = m.MobileNumber,
