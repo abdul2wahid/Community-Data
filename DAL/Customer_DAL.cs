@@ -212,6 +212,7 @@ namespace DAL
                         CustomerID = m.CustomerId,
                         Name = m.Name,
                         Age = DateTime.Now.Year - m.Dob.Year,
+                        DOB = m.Dob.Day.ToString("D2") + "-" + m.Dob.Month.ToString("D2") + "-" + m.Dob.Year,
                         Gender = m.Gender.Gender1,
                         MobileNumber = m.MobileNumber,
                         MaritalStatus = m.MaritalStatus.MaritalStatus1,

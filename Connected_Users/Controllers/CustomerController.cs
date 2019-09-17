@@ -100,20 +100,7 @@ namespace Connected_Users.Controllers
         }
 
 
-        private bool   Validate(CustomerDetails cust)
-        {
-            if (String.IsNullOrEmpty(cust.Name) || String.IsNullOrEmpty(cust.DOB)
-             || String.IsNullOrEmpty(cust.OccupationDetails) || String.IsNullOrEmpty(cust.Area)
-             || String.IsNullOrEmpty(cust.MobileNumber)
-             || cust.GenderId < 0 || cust.MaritalStatusId < 0 || cust.OccupationId <0
-             || cust.educationId < 0 || cust.arabicEducationID < 0
-                || cust.CityId <0 || cust.StateId <0 || cust.PinId < 0)
-            {
-                return false;
-            }
-            return true;
-        }
-
+      
       
 
         // POST api/values
@@ -121,7 +108,7 @@ namespace Connected_Users.Controllers
         public bool Post([FromBody]CustomerDetails cust)
         {
 
-            if (Validate(cust))
+            if (ModelState.IsValid)
             {
 
                 return bl.AddCustomer(cust, HttpContext.User.FindFirst(c => c.Type == "RId").Value,
@@ -135,19 +122,17 @@ namespace Connected_Users.Controllers
         [HttpPut("{id}"), Route("~/api/[controller]/Update")]
         public bool Put([FromBody] List<CustomerDetails> cust)
         {
-            //Customers cust = new Customers() { CustomerId = id };
-
-            foreach(CustomerDetails cus in cust)
+            if (ModelState.IsValid)
             {
-                if (!Validate(cus))
-                {
-                    return false;
-                }
-              
-            }
 
-            return bl.UpdateCustomer(cust, HttpContext.User.FindFirst(c => c.Type == "RId").Value,
-              HttpContext.User.FindFirst(c => c.Type == "Id").Value);
+                return bl.UpdateCustomer(cust, HttpContext.User.FindFirst(c => c.Type == "RId").Value,
+                 HttpContext.User.FindFirst(c => c.Type == "Id").Value);
+               
+            }
+            else
+            {
+                return false;
+            }
         }
 
         // DELETE api/values/5
