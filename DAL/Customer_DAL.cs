@@ -79,10 +79,10 @@ namespace DAL
             return result;
         }
 
-        public List<CustomerModel> GetCustomers(string sortOrder, int currentPageNo, string filterString)
+        public List<CustomerModel> GetCustomers(string sortOrder, int currentPageNo, string filterString, int pageSize)
         {
 
-
+           
             using (var context = new connected_usersContext())
             {
                 if (!string.IsNullOrEmpty(filterString))
@@ -102,7 +102,7 @@ namespace DAL
                                             MaritalStatus = p.i.b.MaritalStatus1,
                                             Occupation = p.j.OccuptionName,
                                             MobileNumber = p.i.a.x.MobileNumber
-                                        }).ToList();
+                                        }).Skip( (currentPageNo - 1 ) * pageSize).Take(pageSize).ToList();
 
                     if (string.IsNullOrEmpty(filterStringArray[0]))
                     {
@@ -137,7 +137,7 @@ namespace DAL
                             MaritalStatus = p.i.b.MaritalStatus1,
                             Occupation = p.j.OccuptionName,
                             MobileNumber = p.i.a.x.MobileNumber
-                        }).OrderBy(x => x.CustomerID).Skip((currentPageNo - 1) * Constants.Max_No_Rows).Take(Constants.Max_No_Rows).ToList();
+                        }).OrderBy(x => x.CustomerID).Skip((currentPageNo - 1) * pageSize).Take(pageSize).ToList();
                 }
                 else
                 {

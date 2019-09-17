@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using Connected_Users.MiddleWare;
@@ -21,6 +22,9 @@ namespace Connected_Users
 {
     public class Startup
     {
+
+
+       public static int PageSize = 10;
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -37,6 +41,7 @@ namespace Connected_Users
         public void ConfigureServices(IServiceCollection services)
         {
 
+            PageSize = Convert.ToInt32(ConfigurationManager.AppSettings["PageSize"]);
             services.AddCors(); 
 
 

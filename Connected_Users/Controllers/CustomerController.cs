@@ -26,9 +26,33 @@ namespace Connected_Users.Controllers
         //[Authorize("EmployeeOnly")]
         // GET api/values
         [HttpGet]
-        public List<CustomerModel> Get(string sortOrder,int currentPageNo,string filterString)
+        public IActionResult Get(string sortOrder, int currentPageNo, string filterString)
         {
-            return bl.GetCustomers(sortOrder,currentPageNo,filterString);
+            List<CustomerModel> list = bl.GetCustomers(sortOrder, currentPageNo, filterString, Startup.PageSize);
+
+            if (list != null)
+            {
+                var obj = new
+                {
+                    Count = list.Count,
+                    pageIndex = currentPageNo,
+                    pageSize = Startup.PageSize,
+                    items = list,
+                };
+                return (Ok(obj));
+            }
+            else
+            {
+                var obj = new
+                {
+                    Count = list.Count,
+                    pageIndex = currentPageNo,
+                    pageSize = Startup.PageSize,
+                    items = new List<CustomerModel>(),
+                };
+                return (Ok( obj));
+            }
+
         }
 
         // GET api/values/5
@@ -80,7 +104,7 @@ namespace Connected_Users.Controllers
 
                 //Add values
                 var j = 2;
-                foreach (CustomerModel cModel in bl.GetCustomers("",-1,""))
+                foreach (CustomerModel cModel in bl.GetCustomers("",-1,"",0))
                 {
                     worksheet.Cells["A" + j].Value = cModel.CustomerID;
                     worksheet.Cells["B" + j].Value = cModel.Name;
