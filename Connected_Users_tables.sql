@@ -10,9 +10,21 @@ drop table events;
 drop table customer_address;
 drop table customers;
 
-select * from Customers
 
+select * from customer_address
+select * from  customers
+select * from   ArabicEducation
+select * from   reltionship
+update customers set maritalStatusID=0,occupationID=0 where CustomerID=51
+select * from  MaritalStatus
+select * from  users
+select * from states
 
+insert into users values(56,'wahid',0,56,56,null,null)
+
+select * from  occupation
+
+update customers set mobile_number='' where customerID in (56,57)
 
 
 
@@ -24,9 +36,10 @@ mobile_number long NOT NULL,occupationID int,arabicEducationID int,educationID i
     foreign key (GenderID) references Gender(GenderID),
     foreign key (maritalStatusID) references MaritalStatus(maritalStatusID));
 
-select * from Customers
+select * from ReltionShip
+
 drop table ReltionShip
-create table ReltionShip (id int not null, userID int not null , childernID int, wifeID int,
+create table ReltionShip (id int not null  primary key AUTO_INCREMENT, userID int not null , childernID int, wifeID int,
 foreign key(userID) references customers(customerID),
 foreign key(childernID) references customers(customerID),
 foreign key(wifeID) references customers(customerID));

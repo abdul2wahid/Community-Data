@@ -28,13 +28,15 @@ namespace Connected_Users.Controllers
         [HttpGet]
         public IActionResult Get(string sortOrder, int currentPageNo, string filterString)
         {
-            List<CustomerModel> list = bl.GetCustomers(sortOrder, currentPageNo, filterString, Startup.PageSize);
+            int count=0;
+           
+            List<CustomerModel> list = bl.GetCustomers(sortOrder, currentPageNo, filterString, Startup.PageSize,out count);
 
             if (list != null)
             {
                 var obj = new
                 {
-                    Count = list.Count,
+                    Count = count,
                     pageIndex = currentPageNo,
                     pageSize = Startup.PageSize,
                     items = list,
@@ -45,7 +47,7 @@ namespace Connected_Users.Controllers
             {
                 var obj = new
                 {
-                    Count = list.Count,
+                    Count =count,
                     pageIndex = currentPageNo,
                     pageSize = Startup.PageSize,
                     items = new List<CustomerModel>(),
@@ -104,7 +106,8 @@ namespace Connected_Users.Controllers
 
                 //Add values
                 var j = 2;
-                foreach (CustomerModel cModel in bl.GetCustomers("",-1,"",0))
+                int count = 0;
+                foreach (CustomerModel cModel in bl.GetCustomers("",-1,"",0, out count))
                 {
                     worksheet.Cells["A" + j].Value = cModel.CustomerID;
                     worksheet.Cells["B" + j].Value = cModel.Name;

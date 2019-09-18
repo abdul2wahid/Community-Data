@@ -79,85 +79,66 @@ namespace DAL
             return result;
         }
 
-        public List<CustomerModel> GetCustomers(string sortOrder, int currentPageNo, string filterString, int pageSize)
+        public List<CustomerModel> GetCustomers(string sortOrder, int currentPageNo, string filterString, int pageSize,out int count)
         {
-
-           
-            using (var context = new connected_usersContext())
+            List<CustomerModel> list = new List<CustomerModel>();
+            try
             {
-                if (!string.IsNullOrEmpty(filterString))
-                {
-                    string[] filterStringArray = filterString.Split(';');
-                    List<CustomerModel> s = context.Customers
-                                        .Join(context.Gender, x => x.GenderId, y => y.GenderId, (x, y) => new { x, y })
-                                         .Join(context.Maritalstatus, a => a.x.MaritalStatusId, b => b.MaritalStatusId, (a, b) => new { a, b })
-                                          .Join(context.Occupation, i => i.a.x.OccupationId, j => j.OccupationId, (i, j) => new { i, j })
-                                        .Select(
-                                        p => new CustomerModel()
-                                        {
-                                            CustomerID = p.i.a.x.CustomerId,
-                                            Name = p.i.a.x.Name,
-                                            Gender = p.i.a.y.Gender1,
-                                            Age = DateTime.Now.Year - p.i.a.x.Dob.Year,
-                                            MaritalStatus = p.i.b.MaritalStatus1,
-                                            Occupation = p.j.OccuptionName,
-                                            MobileNumber = p.i.a.x.MobileNumber
-                                        }).Skip( (currentPageNo - 1 ) * pageSize).Take(pageSize).ToList();
-
-                    if (string.IsNullOrEmpty(filterStringArray[0]))
-                    {
-                        s = s.FindAll(x => x.Gender == filterStringArray[0]);
-                    }
-                    if (string.IsNullOrEmpty(filterStringArray[1]))
-                    {
-                        s.FindAll(x => x.MaritalStatus == filterStringArray[1]);
-                    }
-                    if (string.IsNullOrEmpty(filterStringArray[2]))
-                    {
-                        s.FindAll(x => x.Occupation == filterStringArray[2]);
-                    }
-
-                    s = s.OrderBy(x => x.CustomerID).Skip((currentPageNo - 1) * Constants.Max_No_Rows).Take(Constants.Max_No_Rows).ToList();
-                    return s;
-                }
-                else if(currentPageNo>=0)
+                using (var context = new connected_usersContext())
                 {
 
-                    return context.Customers
-                        .Join(context.Gender, x => x.GenderId, y => y.GenderId, (x, y) => new { x, y })
-                         .Join(context.Maritalstatus, a => a.x.MaritalStatusId, b => b.MaritalStatusId, (a, b) => new { a, b })
-                          .Join(context.Occupation, i => i.a.x.OccupationId, j => j.OccupationId, (i, j) => new { i, j })
-                        .Select(
-                        p => new CustomerModel()
+                    list = context.Customers
+                                       .Join(context.Gender, x => x.GenderId, y => y.GenderId, (x, y) => new { x, y })
+                                        .Join(context.Maritalstatus, a => a.x.MaritalStatusId, b => b.MaritalStatusId, (a, b) => new { a, b })
+                                         .Join(context.Occupation, i => i.a.x.OccupationId, j => j.OccupationId, (i, j) => new { i, j })
+                                       .Select(
+                                       p => new CustomerModel()
+                                       {
+                                           CustomerID = p.i.a.x.CustomerId,
+                                           Name = p.i.a.x.Name,
+                                           Gender = p.i.a.y.Gender1,
+                                           Age = DateTime.Now.Year - p.i.a.x.Dob.Year,
+                                           MaritalStatus = p.i.b.MaritalStatus1,
+                                           Occupation = p.j.OccuptionName,
+                                           MobileNumber = p.i.a.x.MobileNumber
+                                       }).ToList();
+
+                    count = list.Count;
+
+                    if (!string.IsNullOrEmpty(filterString))
+                    {
+                        string[] filterStringArray = filterString.Split(';');
+
+                        if (!string.IsNullOrEmpty(filterStringArray[0]))
                         {
-                            CustomerID = p.i.a.x.CustomerId,
-                            Name = p.i.a.x.Name,
-                            Gender = p.i.a.y.Gender1,
-                            Age = DateTime.Now.Year - p.i.a.x.Dob.Year,
-                            MaritalStatus = p.i.b.MaritalStatus1,
-                            Occupation = p.j.OccuptionName,
-                            MobileNumber = p.i.a.x.MobileNumber
-                        }).OrderBy(x => x.CustomerID).Skip((currentPageNo - 1) * pageSize).Take(pageSize).ToList();
-                }
-                else
-                {
-                    return context.Customers
-                      .Join(context.Gender, x => x.GenderId, y => y.GenderId, (x, y) => new { x, y })
-                       .Join(context.Maritalstatus, a => a.x.MaritalStatusId, b => b.MaritalStatusId, (a, b) => new { a, b })
-                        .Join(context.Occupation, i => i.a.x.OccupationId, j => j.OccupationId, (i, j) => new { i, j })
-                      .Select(
-                      p => new CustomerModel()
-                      {
-                          CustomerID = p.i.a.x.CustomerId,
-                          Name = p.i.a.x.Name,
-                          Gender = p.i.a.y.Gender1,
-                          Age = DateTime.Now.Year - p.i.a.x.Dob.Year,
-                          MaritalStatus = p.i.b.MaritalStatus1,
-                          Occupation = p.j.OccuptionName,
-                          MobileNumber = p.i.a.x.MobileNumber
-                      }).ToList();
+                            list = list.Where(x => x.Gender == filterStringArray[0].Trim()).ToList();
+                        }
+                        if (filterStringArray.Length >=2 && !(string.IsNullOrEmpty(filterStringArray[1])))
+
+                        {
+                            list = list.Where(x => x.MaritalStatus == filterStringArray[1]).ToList();
+                        }
+
+                        if (filterStringArray.Length >= 3 && !(string.IsNullOrEmpty(filterStringArray[2])))
+                        {
+                            list = list.Where(x => x.Occupation == filterStringArray[2]).ToList();
+                        }
+                        count = list.Count;
+                        
+                    }
+
+              
+                      list = list.Skip((currentPageNo - 1) * pageSize).Take(pageSize).ToList();
+
                 }
             }
+            catch(Exception ex)
+            {
+                count = 0;
+                //log  here
+            }
+
+            return list;
         }
 
         public List<CustomerDetails> GetCustomerDetails(int custID)

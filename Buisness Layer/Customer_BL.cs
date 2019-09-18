@@ -17,9 +17,9 @@ namespace Buisness_Layer
             dal = new Customer_DAL();
         }
 
-        public List<CustomerModel> GetCustomers( string sortOrder, int currentPageNo, string filterString,int pageSize)
+        public List<CustomerModel> GetCustomers( string sortOrder, int currentPageNo, string filterString,int pageSize,  out int count)
         {
-           return dal.GetCustomers(sortOrder,currentPageNo, filterString, pageSize);
+           return dal.GetCustomers(sortOrder,currentPageNo, filterString, pageSize,out count);
         }
 
 
