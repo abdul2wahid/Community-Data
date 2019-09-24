@@ -108,20 +108,28 @@ namespace DAL
                     if (!string.IsNullOrEmpty(filterString))
                     {
                         string[] filterStringArray = filterString.Split(';');
-
-                        if (!string.IsNullOrEmpty(filterStringArray[0]))
+                        if (filterStringArray.Length >= 4 && !(string.IsNullOrEmpty(filterStringArray[3])))
                         {
-                            list = list.Where(x => x.Gender == filterStringArray[0].Trim()).ToList();
+                            string searchString = filterStringArray[3].Trim();
+                            list = list.Where(x => x.Name.Contains(searchString)).ToList();
+
                         }
-                        if (filterStringArray.Length >=2 && !(string.IsNullOrEmpty(filterStringArray[1])))
-
+                        else
                         {
-                            list = list.Where(x => x.MaritalStatus == filterStringArray[1]).ToList();
-                        }
+                            if (filterStringArray.Length >= 1  && !(string.IsNullOrEmpty(filterStringArray[0])))
+                            {
+                                list = list.Where(x => x.Gender == filterStringArray[0].Trim()).ToList();
+                            }
+                            if (filterStringArray.Length >= 2 && !(string.IsNullOrEmpty(filterStringArray[1])))
 
-                        if (filterStringArray.Length >= 3 && !(string.IsNullOrEmpty(filterStringArray[2])))
-                        {
-                            list = list.Where(x => x.Occupation == filterStringArray[2]).ToList();
+                            {
+                                list = list.Where(x => x.MaritalStatus == filterStringArray[1]).ToList();
+                            }
+
+                            if (filterStringArray.Length >= 3 && !(string.IsNullOrEmpty(filterStringArray[2])))
+                            {
+                                list = list.Where(x => x.Occupation == filterStringArray[2]).ToList();
+                            }
                         }
                         count = list.Count;
                         
