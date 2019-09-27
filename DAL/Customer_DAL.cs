@@ -135,9 +135,8 @@ namespace DAL
                         
                     }
 
-              
-                      list = list.Skip((currentPageNo - 1) * pageSize).Take(pageSize).ToList();
-
+                  
+                        list = list.Skip((currentPageNo - 1) * pageSize).Take(pageSize).ToList();
                 }
             }
             catch(Exception ex)
@@ -228,6 +227,47 @@ namespace DAL
             return custList;
         }
 
+        /// <summary>
+        /// Return all users for excel download
+        /// </summary>
+        /// <returns></returns>
+        public List<CustomerDetails> GetCustomerDetails()
+        {
+            List<CustomerDetails> custList = new List<CustomerDetails>();
+
+            using (var context = new connected_usersContext())
+            {
+                custList=context.Customers.AsNoTracking().Include(x => x.CustomerAddress).Select(m => new CustomerDetails()
+                {
+                    CustomerID = m.CustomerId,
+                    Name = m.Name,
+                    Age = DateTime.Now.Year - m.Dob.Year,
+                    DOB = m.Dob.Day.ToString("D2") + "-" + m.Dob.Month.ToString("D2") + "-" + m.Dob.Year,
+                    Gender = m.Gender.Gender1,
+                    MobileNumber = m.MobileNumber,
+                    MaritalStatus = m.MaritalStatus.MaritalStatus1,
+                    Occupation = m.Occupation.OccuptionName,
+
+
+                    OccupationDetails = m.OccupdationDetails,
+                    EducationDetails = m.EducationDetail,
+                    educationName = m.Education.EducationName,
+                    arabicEducationName = m.ArabicEducation.ArabicEducationName,
+
+                    Address1 = m.CustomerAddress.Address1,
+                    Address2 = m.CustomerAddress.Address2,
+                    State = m.CustomerAddress.State.State,
+                    City = m.CustomerAddress.City.City1,
+                    Area = m.CustomerAddress.Area,
+                    Pin = m.CustomerAddress.Pin.Pin,
+                    DependantParentID = -1,
+
+
+                }).ToList();
+            }
+
+            return custList;
+        }
 
         public int FindCustomer(string userName, DateTime DOB)
         {

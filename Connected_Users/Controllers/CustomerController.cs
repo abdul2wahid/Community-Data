@@ -77,13 +77,26 @@ namespace Connected_Users.Controllers
 
             var comlumHeadrs = new string[]
           {
-                "Customer Id",
                 "Name",
                 "Gender",
                 "Age",
                 "Marital Status",
-                "Occupation",
-                "Mobile Number"
+                "Mobile Number",
+
+                 "Occupation",
+                "OccupationDetails",
+
+                "arabicEducationName",
+                "educationName",
+                "EducationDetails",
+
+               "Address1",
+               "Address2",
+               "Area",
+               "City" ,
+               "State",
+               "pin"
+
           };
 
             byte[] result;
@@ -91,11 +104,11 @@ namespace Connected_Users.Controllers
             using (var package = new ExcelPackage())
             {
                 // add a new worksheet to the empty workbook
-
-                var worksheet = package.Workbook.Worksheets.Add("Customer data"); //Worksheet name
-                using (var cells = worksheet.Cells[1, 1, 1, 5]) //(1,1) (1,5)
+                var worksheet = package.Workbook.Worksheets.Add("users"); //Worksheet name
+                using (var cells = worksheet.Cells[1, 1, 1, comlumHeadrs.Length+1]) //(1,1) (1,0)
                 {
                     cells.Style.Font.Bold = true;
+                    cells.AutoFilter = true;
                 }
 
                 //First add the headers
@@ -107,15 +120,30 @@ namespace Connected_Users.Controllers
                 //Add values
                 var j = 2;
                 int count = 0;
-                foreach (CustomerModel cModel in bl.GetCustomers("",-1,"",0, out count))
+                foreach (CustomerDetails cModel in bl.GetCustomerDetails())
                 {
-                    worksheet.Cells["A" + j].Value = cModel.CustomerID;
-                    worksheet.Cells["B" + j].Value = cModel.Name;
-                    worksheet.Cells["C" + j].Value = cModel.Gender;
-                    worksheet.Cells["D" + j].Value = cModel.Age;
-                    worksheet.Cells["E" + j].Value = cModel.MaritalStatus;
+             
+                    worksheet.Cells["A" + j].Value = cModel.Name;
+                    worksheet.Cells["B" + j].Value = cModel.Gender;
+                    worksheet.Cells["C" + j].Value = cModel.Age;
+                    worksheet.Cells["D" + j].Value = cModel.MaritalStatus;
+                    worksheet.Cells["E" + j].Value = cModel.MobileNumber;
+
+
                     worksheet.Cells["F" + j].Value = cModel.Occupation;
-                    worksheet.Cells["G" + j].Value = cModel.MobileNumber;
+                    worksheet.Cells["G" + j].Value = cModel.OccupationDetails;
+                  
+
+                    worksheet.Cells["H" + j].Value = cModel.arabicEducationName;
+                    worksheet.Cells["I" + j].Value = cModel.educationName;
+                    worksheet.Cells["J" + j].Value = cModel.EducationDetails;
+
+                    worksheet.Cells["K" + j].Value = cModel.Address1;
+                    worksheet.Cells["L" + j].Value = cModel.Address2;
+                    worksheet.Cells["M" + j].Value = cModel.Area;
+                    worksheet.Cells["N" + j].Value = cModel.City;
+                    worksheet.Cells["O" + j].Value = cModel.State;
+                    worksheet.Cells["P" + j].Value = cModel.Pin;
 
                     j++;
                 }

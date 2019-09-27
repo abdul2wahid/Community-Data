@@ -54,6 +54,21 @@ namespace Buisness_Layer
             return list;
         }
 
+        public List<CustomerDetails> GetCustomerDetails()
+        {
+            List<CustomerDetails> list = dal.GetCustomerDetails();
+
+            //foreach(CustomerDetails cD in list)
+            //{
+            //    DateTime date = new DateTime(cD.DOB.Year, cD.DOB.Month, cD.DOB.Day);
+            //    cD.DOB =
+            //        Convert.ToDateTime(DateTime.ParseExact(Convert.ToString(cD.DOB), "dd-MM-yyyy", CultureInfo.InvariantCulture));
+            //}
+
+            return list;
+        }
+
+
         public int FindCustomer(string userName,string DOB)
         {
             if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(DOB))
