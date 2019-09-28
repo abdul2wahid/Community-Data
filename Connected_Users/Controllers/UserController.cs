@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Newtonsoft.Json;
 
 namespace Connected_Users.Controllers
 {
@@ -27,11 +28,36 @@ namespace Connected_Users.Controllers
 
         // GET: api/User
         [HttpGet]
-        public List<UserModel> Get(string sortOrder, int currentPageNo, string filterString)
+        public IActionResult Get(string sortOrder, int currentPageNo, string filterString)
         {
-            return usersBL.GetUsers(HttpContext.User.FindFirst(c => c.Type == "RId").Value,
-                HttpContext.User.FindFirst(c => c.Type == "Id").Value, sortOrder, currentPageNo,filterString);
-          
+            int count = 0;
+            List<UserModel> list =usersBL.GetUsers(HttpContext.User.FindFirst(c => c.Type == "RId").Value,
+               HttpContext.User.FindFirst(c => c.Type == "Id").Value, sortOrder, currentPageNo, filterString,out count);
+
+
+            if (list != null)
+            {
+                var obj = new
+                {
+                    Count = count,
+                    pageIndex = currentPageNo,
+                    pageSize = Startup.PageSize,
+                    items = list,
+                };
+                return (Ok(obj));
+            }
+            else
+            {
+                var obj = new
+                {
+                    Count = count,
+                    pageIndex = currentPageNo,
+                    pageSize = Startup.PageSize,
+                    items = new List<CustomerModel>(),
+                };
+                return (Ok(obj));
+            }
+            
         }
 
         [Authorize(Policy = "SU&AdminPolicy")]
@@ -78,9 +104,9 @@ namespace Connected_Users.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] UserModel value)
         {
-            
-            return Ok(usersBL.AddUser(value, HttpContext.User.FindFirst(c => c.Type == "RId").Value,
-                HttpContext.User.FindFirst(c => c.Type == "Id").Value));
+            string str = usersBL.AddUser(value, HttpContext.User.FindFirst(c => c.Type == "RId").Value,
+                HttpContext.User.FindFirst(c => c.Type == "Id").Value);
+            return Ok(JsonConvert.SerializeObject(str));
         }
 
 

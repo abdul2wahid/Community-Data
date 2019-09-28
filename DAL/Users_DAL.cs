@@ -17,9 +17,12 @@ namespace DAL.Entities
             {
                 try
                 {
+                    int custID = context.Customers.Where(x => x.Name == user.UserName
+            && x.Dob.Day.ToString("D2") + "/" + x.Dob.Month.ToString("D2") + "/" + x.Dob.Year == user.DOB).Select(x=>x.CustomerId).FirstOrDefault();
+
                     context.Users.Add(new Users()
                     {
-                        UserId = user.UserId,
+                        UserId = custID,
                         Password = "12345",
                         RoleId = user.RoleId,
                         CreatedBy = Convert.ToInt32(createdPersonUserId),
@@ -45,8 +48,10 @@ namespace DAL.Entities
             using (var context = new connected_usersContext())
             {
 
-                var exist = context.Customers.Find(user.UserId);
-                if (exist == null)
+                Customers exist = context.Customers.Where(x => x.Name == user.UserName
+             && x.Dob.Day.ToString("D2") + "/" + x.Dob.Month.ToString("D2") + "/" + x.Dob.Year == user.DOB).FirstOrDefault();
+
+                if (exist == null  || exist.CustomerId<=-1)
                 {
                     return false;
                 }
@@ -59,14 +64,22 @@ namespace DAL.Entities
         {
             using (var context = new connected_usersContext())
             {
+                bool userAlreadyExist = false;
 
-                var exist = context.Users.Find(user.UserId);
-                if (exist == null)
+                var exist = context.Customers.Where(x => x.Name == user.UserName
+              && x.Dob.Day.ToString("D2") + "/" + x.Dob.Month.ToString("D2") + "/" + x.Dob.Year == user.DOB).FirstOrDefault(); ;
+                
+                if (exist != null && exist.CustomerId > -1)
                 {
-                    return false;
+                    Users userExist = context.Users.Find(exist.CustomerId);
+                    if(userExist!=null)
+                    {
+                        userAlreadyExist = true;
+                    }
+                    
                 }
               
-                return true;
+                return userAlreadyExist;
             }
         }
 
@@ -251,5 +264,7 @@ namespace DAL.Entities
                 return true;
             }
         }
+
+        
     }
 }

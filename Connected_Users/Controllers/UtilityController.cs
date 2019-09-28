@@ -23,15 +23,6 @@ namespace Connected_Users.Controllers
             utilityBL = new Utility_BL();
         }
 
-        // GET: api/Utility
-        [HttpGet, Route("~/api/[controller]/GetRoles")]
-        public IActionResult Get()
-        {
-
-            return Ok(utilityBL.GetRoles(
-            HttpContext.User.FindFirst(c => c.Type == "RId").Value,
-                HttpContext.User.FindFirst(c => c.Type == "Id").Value));
-        }
 
         // GET: api/Utility/5
         [HttpGet, Route("~/api/[controller]/GetGender")]
@@ -104,7 +95,13 @@ namespace Connected_Users.Controllers
               HttpContext.User.FindFirst(c => c.Type == "Id").Value));
         }
 
-
+        [HttpGet, Route("~/api/[controller]/GetRoles")]
+        public IActionResult GetRoles()
+        {
+            return Ok(utilityBL.GetRoles(
+          HttpContext.User.FindFirst(c => c.Type == "RId").Value,
+              HttpContext.User.FindFirst(c => c.Type == "Id").Value));
+        }
 
         // POST: api/Utility
         [HttpPost]

@@ -18,16 +18,17 @@ namespace BuisnessLayer
             dal = new Users_DAL();
         }
 
-        public List<UserModel> GetUsers(string loggedInUserRoleId, string userId, string sortOrder, int currentPageNo, string filterString)
+        public List<UserModel> GetUsers(string loggedInUserRoleId, string userId, string sortOrder, int currentPageNo, string filterString, out int count)
         {
             List<UserModel> result = dal.GetUsers();
+            count = result.Count;
             string[] filterStringArray = filterString.Split(';');
             if (Convert.ToInt32(loggedInUserRoleId) != 0) //except super user
             {
                 UserModel loggedInUser = result.Find(x => x.UserId == Convert.ToInt32(userId));
                 result.RemoveAll(x => x.RoleId <= Convert.ToInt32(loggedInUserRoleId));
                 result.Insert(result.Count, loggedInUser);
-
+                count = result.Count;
                 if (!string.IsNullOrEmpty(filterString))
                 {
                     if (!string.IsNullOrEmpty(filterStringArray[0]))
@@ -38,7 +39,7 @@ namespace BuisnessLayer
                 }
                 result = result.Skip((currentPageNo - 1) * Constants.Max_No_Rows).Take(Constants.Max_No_Rows).ToList();
             }
-
+          
             return result;
         }
 
@@ -50,19 +51,20 @@ namespace BuisnessLayer
             {
                 if(!dal.VerifyIfUserAlreadyAssignedRole(user))
                 {
+                    dal.GetUsers();
                     if (Convert.ToInt32(loggedInUserRoleId) != 0) //except super user
                     {
                         if (Convert.ToInt32(loggedInUserRoleId) <= user.RoleId)
-                        {
-                            s = "Incorrect Previelaages to add user";
-                        }
-                        else
                         {
                             if (dal.AddUser(user, userId))
                             {
                                 s = "success";
                             }
-                           
+                            
+                        }
+                        else
+                        {
+                            s = "Incorrect Previelage to add user";
                         }
                     }
                     else //If super user
@@ -101,7 +103,7 @@ namespace BuisnessLayer
                 claims.AddClaim(new Claim("Name", obj.Name));
                 claims.AddClaim(new Claim("Role", obj.Role));
                 claims.AddClaim(new Claim("Id", Convert.ToString(obj.Id)));
-                claims.AddClaim(new Claim("RId", Convert.ToString(obj.Id)));
+                claims.AddClaim(new Claim("RId", Convert.ToString(obj.RoleId)));
                 return tokenManager.GenerateToken(claims);
             }
             return string.Empty;
