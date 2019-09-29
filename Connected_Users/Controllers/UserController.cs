@@ -146,12 +146,12 @@ namespace Connected_Users.Controllers
         // DELETE: api/ApiWithActions/5
         [Authorize(Policy = "SU&AdminPolicy")]
         [HttpDelete("{id}")]
-        public IActionResult Delete(UpdatePasswordModel value)
+        public IActionResult Delete(int id)
         {
-         
 
-            return Ok(usersBL.DeleteUsers(value, HttpContext.User.FindFirst(c => c.Type == "RId").Value,
-                HttpContext.User.FindFirst(c => c.Type == "Id").Value));
+            string str = usersBL.DeleteUsers(id, HttpContext.User.FindFirst(c => c.Type == "RId").Value,
+                HttpContext.User.FindFirst(c => c.Type == "Id").Value);
+            return Ok(JsonConvert.SerializeObject(str));
         }
     }
 }

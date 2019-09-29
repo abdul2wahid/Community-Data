@@ -89,10 +89,11 @@ namespace DAL.Entities
             using (var context = new connected_usersContext())
             {
 
-              Customers cust = context.Customers.Where(x=>x.Name==username  && x.Dob==dt).FirstOrDefault();
+              Customers cust = context.Customers.Where(x=>x.Name.ToLower()==username.ToLower()  && x.Dob==dt).FirstOrDefault();
                 if (cust != null)
                 {
-                    Users user = context.Users.Where(x => x.Password == password).FirstOrDefault();
+                    Users user = context.Users.Where(x => x.UserId== cust.CustomerId
+                    && x.Password == password).FirstOrDefault();
                     if (user != null)
                     {
                         Roles roles = context.Roles.Where(x => x.RoleId == user.RoleId).FirstOrDefault();
@@ -190,23 +191,24 @@ namespace DAL.Entities
         {
             using (var context = new connected_usersContext())
             {
+                Customers exist = context.Customers.Where(x => x.Name == user.UserName
+                && x.Dob.Day.ToString("D2") + "/" + x.Dob.Month.ToString("D2") + "/" + x.Dob.Year == user.DOB).FirstOrDefault();
 
-                var entity = context.Users.Find(user.UserId);
-                if (entity == null)
+                if (exist == null || exist.CustomerId <= -1)
                 {
                     return null;
                 }
 
-               var verify= context.Customers.Find(user.UserId);
-                if (verify.Name == user.UserName && verify.CustomerId == user.UserId && Convert.ToString(verify.Dob) == user.DOB)
+                var verify = context.Users.Find(exist.CustomerId);
+                if (verify != null || verify.UserId > -1)
                 {
-                    entity.RoleId = context.Roles.Where(x => x.RoleName == user.Role).Select(y => y.RoleId).FirstOrDefault();
+                    verify.RoleId = context.Roles.Where(x => x.RoleName == user.Role).Select(y => y.RoleId).FirstOrDefault();
                     context.SaveChanges();
                 }
                 else
+                {
                     return null;
-                //context.Customers.Update(cust);
-                //context.SaveChanges();
+                }
 
                 return user;
             }
@@ -259,7 +261,7 @@ namespace DAL.Entities
                 }
 
 
-                context.Users.Remove(user);
+                context.Users.Remove(entity);
                 context.SaveChanges();
                 return true;
             }

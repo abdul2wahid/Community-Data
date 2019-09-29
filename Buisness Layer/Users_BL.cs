@@ -123,7 +123,7 @@ namespace BuisnessLayer
            
             if (Convert.ToInt32(loggedInUserRoleId) != 0)
             {
-                if (Convert.ToInt32(loggedInUserRoleId) <= user.RoleId)
+                if (Convert.ToInt32(loggedInUserRoleId) >= user.RoleId)
                 {
                     user.UserId = -2;
                     return user;
@@ -171,54 +171,41 @@ namespace BuisnessLayer
         
 
 
-        public string DeleteUsers(UserModel user,string loggedInUserRoleId, string userId)
+        public string DeleteUsers(int userIdToDelete,string loggedInUserRoleId, string userId)
         {
             string s = "Error couln't delete user";
-            if (dal.VerifyIfCustomerExist(user))
+
+            if (Convert.ToInt32(loggedInUserRoleId) != 0) //except super user
             {
-                if (dal.VerifyIfUserAlreadyAssignedRole(user))
+                if (Convert.ToInt32(loggedInUserRoleId) < userIdToDelete)
                 {
-                    if (Convert.ToInt32(loggedInUserRoleId) != 0) //except super user
-                    {
-                        if (Convert.ToInt32(loggedInUserRoleId) <= user.RoleId)
-                        {
 
-                            s = "Incorrect previelges, couldn't delete user";
-                            
-                        }
-                        else
-                        {
-                            if (dal.DeleteUsers(new Users()
-                            {
-                                UserId = user.UserId
-                            }))
-                            {
-                                s = "SUCCESS";
-                            }
-                        }
-                    }
-                    else
+                    if (dal.DeleteUsers(new Users()
                     {
-                        if (dal.DeleteUsers(new Users()
-                        {
-                            UserId = user.UserId
-                        }))
-                        {
-                            s = "SUCCESS";
-                        }
+                        UserId = userIdToDelete
+                    }))
+                    {
+                        s = "SUCCESS";
                     }
 
-                   
+
                 }
                 else
                 {
-                    s = "User has no role assigned to him, please check.";
+                    s = "Incorrect previelges, couldn't delete user";
                 }
             }
             else
             {
-                s = "customer doesn't exist.";
+                if (dal.DeleteUsers(new Users()
+                {
+                    UserId = userIdToDelete
+                }))
+                {
+                    s = "SUCCESS";
+                }
             }
+
             return s;
         }
     }

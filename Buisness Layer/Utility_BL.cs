@@ -23,7 +23,7 @@ namespace BuisnessLayer
              List<Roles> result = dal.GetRoles();
             if (Convert.ToInt32(loggedInUserRoleId) != 0) //except super user
             {
-                result.RemoveAll(x => x.RoleId <= Convert.ToInt32(loggedInUserRoleId));
+                result.RemoveAll(x => x.RoleId < Convert.ToInt32(loggedInUserRoleId));
             }
            
 
