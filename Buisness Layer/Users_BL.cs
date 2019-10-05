@@ -146,7 +146,7 @@ namespace BuisnessLayer
             /// <param name="loggedInUserRoleId"></param>
             /// <param name="userId"></param>
             /// <returns></returns>
-            public UpdatePasswordModel UpdatePassword(UpdatePasswordModel user, string loggedInUserRoleId, string userId)
+        public bool UpdatePassword(UpdatePasswordModel user, string loggedInUserRoleId, string userId)
         {
 
             if (Convert.ToInt32(userId) == user.UserId)
@@ -159,13 +159,11 @@ namespace BuisnessLayer
             }
             else //reset for some one else
             {
-                if(user.confirmPassword==string.Empty && user.newPassword==string.Empty
-                    && user.oldPassword==string.Empty)
-                {
+               
                     return dal.UpdatePassword(user,true);
-                }
+                
             }
-            return null;
+            return false;
         }
 
         

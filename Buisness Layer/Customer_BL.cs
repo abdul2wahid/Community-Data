@@ -4,6 +4,7 @@ using Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace Buisness_Layer
 {
@@ -17,9 +18,9 @@ namespace Buisness_Layer
             dal = new Customer_DAL();
         }
 
-        public List<CustomerModel> GetCustomers( string sortOrder, int currentPageNo, string filterString,int pageSize,  out int count)
+        public List<CustomerModel> GetCustomers(string sortOrder, int currentPageNo, string filterString, int pageSize, out int count)
         {
-           return dal.GetCustomers(sortOrder,currentPageNo, filterString, pageSize,out count);
+            return dal.GetCustomers(sortOrder, currentPageNo, filterString, pageSize, out count);
         }
 
 

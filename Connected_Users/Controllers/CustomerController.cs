@@ -25,6 +25,7 @@ namespace Connected_Users.Controllers
 
         //[Authorize("EmployeeOnly")]
         // GET api/values
+      
         [HttpGet]
         public IActionResult Get(string sortOrder, int currentPageNo, string filterString)
         {
@@ -64,6 +65,7 @@ namespace Connected_Users.Controllers
             return bl.GetCustomerDetails(id);
         }
 
+        [Authorize(Policy = "SuperUser&AdminPolicy")]
         [HttpGet("{id}"), Route("~/api/[controller]/Find")]
         public int Get(string userName,string DOB)
         {
@@ -71,6 +73,7 @@ namespace Connected_Users.Controllers
         }
 
 
+        [Authorize(Policy = "SuperUser&AdminPolicy")]
         [HttpGet("{id}"), Route("~/api/[controller]/DownloadCustomers")]
         public IActionResult Get()
         {
@@ -155,9 +158,9 @@ namespace Connected_Users.Controllers
         }
 
 
-      
-      
 
+
+        
         // POST api/values
         [HttpPost]
         public bool Post([FromBody]CustomerDetails cust)
@@ -173,6 +176,7 @@ namespace Connected_Users.Controllers
 
         }
 
+        [Authorize(Policy = "SuperUser&AdminPolicy")]
         // PUT api/values/5
         [HttpPut("{id}"), Route("~/api/[controller]/Update")]
         public bool Put([FromBody] List<CustomerDetails> cust)
@@ -190,6 +194,7 @@ namespace Connected_Users.Controllers
             }
         }
 
+        [Authorize(Policy = "SuperUser&AdminPolicy")]
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public bool Delete(int id)

@@ -60,7 +60,7 @@ namespace Connected_Users.Controllers
             
         }
 
-        [Authorize(Policy = "SU&AdminPolicy")]
+        [Authorize(Policy = "SuperUser&AdminPolicy")]
         // GET: api/User
         [HttpGet, Route("~/api/[controller]/SearchUser")]
         public List<UserModel> Get(UserModel search)
@@ -100,7 +100,7 @@ namespace Connected_Users.Controllers
         }
 
 
-        [Authorize(Policy = "SU&AdminPolicy")]
+        [Authorize(Policy = "SuperUser&AdminPolicy")]
         [HttpPost]
         public IActionResult Post([FromBody] UserModel value)
         {
@@ -110,7 +110,7 @@ namespace Connected_Users.Controllers
         }
 
 
-        [Authorize(Policy = "SU&AdminPolicy")]
+        [Authorize(Policy = "SuperUser&AdminPolicy")]
         // PUT: api/User/5
         [HttpPut("{id}"), Route("~/api/[controller]/UpdateRole")]
         public IActionResult Put( [FromBody] UserModel value)
@@ -127,24 +127,17 @@ namespace Connected_Users.Controllers
              return Ok(user);
         }
 
-        [Authorize(Policy = "SU&AdminPolicy")]
+        [Authorize(Policy = "SuperUser&AdminPolicy")]
         [HttpPut("{id}"), Route("~/api/[controller]/UpdatePassword")]
         public IActionResult Put([FromBody] UpdatePasswordModel value)
         {
 
-            UserModel user = usersBL.UpdatePassword(value, HttpContext.User.FindFirst(c => c.Type == "RId").Value,
-                HttpContext.User.FindFirst(c => c.Type == "Id").Value);
-            if (user != null )
-            {
-                return BadRequest();
-            }
-
-
-            return Ok(user);
+            return Ok(usersBL.UpdatePassword(value, HttpContext.User.FindFirst(c => c.Type == "RId").Value,
+                HttpContext.User.FindFirst(c => c.Type == "Id").Value));
         }
 
         // DELETE: api/ApiWithActions/5
-        [Authorize(Policy = "SU&AdminPolicy")]
+        [Authorize(Policy = "SuperUser&AdminPolicy")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

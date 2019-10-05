@@ -77,12 +77,27 @@ namespace Connected_Users
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("SU&AdminPolicy", policy => policy.Requirements.Add(new CustomAuthorizationRequirement(new List<string>() { Constants.Super_User, Constants.Admin })));
+                options.AddPolicy("AdminPolicy", policy => policy.Requirements.Add(new CustomAuthorizationRequirement(new List<string>() { Constants.Admin })));
             });
 
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AllLoggedInUsersPolicy", policy => policy.Requirements.Add(new CustomAuthorizationRequirement(new List<string>() { Constants.Super_User,Constants.Admin,Constants.Memeber })));
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("SuperUser&AdminPolicy", policy => policy.Requirements.Add(new CustomAuthorizationRequirement(new List<string>() { Constants.Super_User, Constants.Admin })));
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("SuperUserPolicy", policy => policy.Requirements.Add(new CustomAuthorizationRequirement(new List<string>() { Constants.Super_User})));
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("MemberPolicy", policy => policy.Requirements.Add(new CustomAuthorizationRequirement(new List<string>() {  Constants.Memeber })));
             });
 
             services.AddSingleton<IAuthorizationHandler, CustomAuthorizationHandler>();
@@ -102,9 +117,9 @@ namespace Connected_Users
         .AllowAnyHeader()
         .AllowAnyMethod());
 
+            app.ConfigureExceptionHandler();
 
-
-            app.UseAuthentication();
+           app.UseAuthentication();
             app.UseMyHandler();
             
 

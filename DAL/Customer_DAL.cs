@@ -79,6 +79,8 @@ namespace DAL
             return result;
         }
 
+      
+
         public List<CustomerModel> GetCustomers(string sortOrder, int currentPageNo, string filterString, int pageSize,out int count)
         {
             List<CustomerModel> list = new List<CustomerModel>();

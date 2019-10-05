@@ -215,7 +215,7 @@ namespace DAL.Entities
         }
 
 
-        public UpdatePasswordModel UpdatePassword(UpdatePasswordModel user, bool isReset)
+        public bool UpdatePassword(UpdatePasswordModel user, bool isReset)
         {
             using (var context = new connected_usersContext())
             {
@@ -223,29 +223,34 @@ namespace DAL.Entities
                 var entity = context.Users.Find(user.UserId);
                 if (entity == null)
                 {
-                    return null;
+                    return false;
                 }
 
-                var verify = context.Customers.Find(user.UserId);
-                if (verify.Name == user.UserName && verify.CustomerId == user.UserId && Convert.ToString(verify.Dob) == user.DOB)
+               
+                if (entity.UserId == user.UserId)
                 {
                     if (isReset)
                     {
                         entity.Password = "12345";
-                        user.newPassword = "12345";
+                    
+                    }
+                    else if(entity.Password == user.oldPassword
+                    && user.newPassword == user.confirmPassword)
+                    {
+                        entity.Password = user.newPassword;
                     }
                     else
                     {
-                        entity.Password = user.newPassword;
+                        return false;
                     }
                     context.SaveChanges();
                 }
                 else
-                    return null;
+                    return false;
                 //context.Customers.Update(cust);
                 //context.SaveChanges();
                 
-                return user;
+                return true;
             }
         }
 
