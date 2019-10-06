@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -21,8 +22,20 @@ namespace Connected_Users.MiddleWare
 
         public async Task Invoke(HttpContext context)
         {
-
-            context.User = GenerateResponse(context);
+            try
+            {
+                if (context.Request.Path.HasValue)
+                {
+                    if (!context.Request.Path.Value.Contains("Login"))
+                        context.User = GenerateResponse(context);
+                }
+            }
+            catch (Exception ex)
+            {
+                context.Response.StatusCode = 500;
+                await  context.Response.WriteAsync("Token Expired");
+                return;
+            }
 
             await _next.Invoke(context);
 
@@ -44,9 +57,10 @@ namespace Connected_Users.MiddleWare
 
               
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                //log here
+               
+                throw ex;
             }
             return null;
         }

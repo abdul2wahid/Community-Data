@@ -28,7 +28,7 @@ namespace TokenManager
                 SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor()
                 {
                     Subject = claims,
-                    Expires = DateTime.Now.AddHours(1),
+                    Expires = DateTime.Now.AddMinutes(5),
                     SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
                 };
 
@@ -58,6 +58,7 @@ namespace TokenManager
 
                 TokenValidationParameters validationParameters = new TokenValidationParameters()
                 {
+                    ClockSkew=TimeSpan.Zero,
                     RequireExpirationTime = true,
                     ValidateIssuer = false,
                     ValidateAudience = false,
@@ -67,7 +68,11 @@ namespace TokenManager
                 SecurityToken securityToken;
                 return handler.ValidateToken(token, validationParameters, out securityToken);
             }
-            catch(Exception ex)
+            catch (SecurityTokenExpiredException expiredEx)
+            {
+                throw new Exception("Token Expired");
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
