@@ -2,6 +2,7 @@
 using Models;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -92,9 +93,11 @@ namespace BuisnessLayer
         }
 
 
-        public string Login(string username, string password, DateTime dt)
+        public dynamic Login(string username, string password, DateTime dt)
         {
             dynamic obj = dal.Login(username, password, dt);
+            string token = string.Empty;
+            dynamic obje = new ExpandoObject();
             if (obj != null)
             {
                 tokenManager = new TokenManager.Token();
@@ -104,9 +107,13 @@ namespace BuisnessLayer
                 claims.AddClaim(new Claim("Role", obj.Role));
                 claims.AddClaim(new Claim("Id", Convert.ToString(obj.Id)));
                 claims.AddClaim(new Claim("RId", Convert.ToString(obj.RoleId)));
-                return tokenManager.GenerateToken(claims);
+                token = tokenManager.GenerateToken(claims);
+                obje.token = token;
+                obje.Role = obj.Role;
             }
-            return string.Empty;
+           
+          
+            return obje;
 
         }
 

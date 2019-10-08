@@ -82,13 +82,14 @@ namespace Connected_Users.Controllers
         [HttpPost, Route("~/api/[controller]/Login")]
         public IActionResult Post([FromBody] dynamic val)
         {
-            string token = usersBL.Login(Convert.ToString(val.username), Convert.ToString(val.password), Convert.ToDateTime(DateTime.ParseExact(Convert.ToString(val.dob), "dd-MM-yyyy", CultureInfo.InvariantCulture)));
-            if (String.IsNullOrEmpty(token))
+            dynamic obj= usersBL.Login(Convert.ToString(val.username), Convert.ToString(val.password), Convert.ToDateTime(DateTime.ParseExact(Convert.ToString(val.dob), "dd-MM-yyyy", CultureInfo.InvariantCulture)));
+              
+            if (obj==null && String.IsNullOrEmpty(obj.token))
             {
                 return Unauthorized();
             }
 
-            return Ok(token);
+            return Ok(obj);
         }
 
         [AllowAnonymous]
