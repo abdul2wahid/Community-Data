@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -33,6 +34,7 @@ namespace Connected_Users
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -40,9 +42,29 @@ namespace Connected_Users
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<IISOptions>(options =>
+            {
+                options.AutomaticAuthentication = false;
+            });
 
             PageSize = Convert.ToInt32(ConfigurationManager.AppSettings["PageSize"]);
-            services.AddCors(); 
+
+
+            services.AddCors(options =>
+            {
+
+                options.AddPolicy("AllowMyOrigin",
+                    builder =>
+                    {
+                        builder.AllowAnyHeader()
+                                            .AllowAnyMethod()
+                                            .AllowAnyOrigin();
+                                            });
+
+            });
+
+
+       
 
 
             services.AddMvc();
@@ -112,20 +134,15 @@ namespace Connected_Users
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
 
-         app.UseCors(
-         options => options.WithOrigins("http://localhost:4200").AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowAnyMethod());
+            app.UseCors("AllowMyOrigin");
 
-            app.ConfigureExceptionHandler();
-
-           app.UseAuthentication();
+        
             app.UseMyHandler();
-            
+            app.ConfigureExceptionHandler();
+            app.UseAuthentication();
+
 
             app.UseMvc();
-
-            
         }
     }
 }

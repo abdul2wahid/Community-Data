@@ -16,3 +16,6 @@
 /.vs/Connected_Users/v15
 /.vs/config
 /.vs/Connected_Users/v15/Server/sqlite3
+/.vs/Connected_Users/DesignTimeBuild
+/Models/bin/Release/netcoreapp2.2
+/TokenManager/bin
