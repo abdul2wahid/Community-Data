@@ -113,7 +113,7 @@ namespace DAL
                         if (filterStringArray.Length >= 4 && !(string.IsNullOrEmpty(filterStringArray[3])))
                         {
                             string searchString = filterStringArray[3].Trim();
-                            list = list.Where(x => x.Name.Contains(searchString)).ToList();
+                            list = list.Where(x => x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
 
                         }
                         else
