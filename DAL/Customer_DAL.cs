@@ -29,10 +29,10 @@ namespace DAL
                         try
                         {
 
-                            var customer = context.Customers.Add(new Customers()
-                            {
-                                Name = c.Name,
-                                Dob = c.DateFormatDOB,
+                        var customer = context.Customers.Add(new Customers()
+                        {
+                            Name = c.Name,
+                            Dob = DateTime.Parse(c.DOB),
                                 ArabicEducationId = c.arabicEducationID,
                                 EducationId = c.educationId,
                                 OccupationId = c.OccupationId,

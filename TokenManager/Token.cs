@@ -28,7 +28,7 @@ namespace TokenManager
                 SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor()
                 {
                     Subject = claims,
-                    Expires = DateTime.Now.AddMinutes(5),
+                    Expires = DateTime.Now.AddMinutes(60),
                     SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
                 };
 
